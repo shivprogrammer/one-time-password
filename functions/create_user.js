@@ -15,5 +15,4 @@ module.exports = function(req, res) {
     .catch(err => res.status(422).send({ error: err }));
 
   // Respond to the user request, saying the account was made
-
 }
