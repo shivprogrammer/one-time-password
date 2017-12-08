@@ -3,7 +3,7 @@ const twilio = require('./twilio');
 
 module.exports = function(req, res) {
   if (!req.body.phone) {
-    return res.status(422).send({ error 'You must provide a phone number' });
+    return res.status(422).send({ error: 'You must provide a phone number' });
   }
 
   const phone = String(req.body.phone).replace(/[^\d]/g, '');
@@ -16,6 +16,13 @@ module.exports = function(req, res) {
         body: 'Your code is ' + code,
         to: phone,
         from: '+12066934665'
+      }, (err) => {
+        if (err) { return res.status(422).send(err); }
+
+        admin.database().ref('users/' + phone)
+          .update({ code: code, codeValid: true }, () => {
+            res.send({ success: true });
+          });
       })
     })
     .catch((err) => {
